@@ -21,14 +21,14 @@ async function createTableProducts() {
         image varchar(255),
         catagory varchar(25)
         
-        );
-        create table if not exists buyers(
+        );`;
+        const query2=`create table if not exists buyers(
         id serial primary key,
         fullName varchar(25) not null,
         email varchar(255) not null,
         password varchar(255) not null
-        );
-        CREATE TABLE IF NOT EXISTS cart_items (
+        );`
+        const query3=`CREATE TABLE IF NOT EXISTS cart_items (
          id SERIAL PRIMARY KEY,
          user_id INT NOT NULL ,FOREIGN KEY(user_id) REFERENCES buyers(id),
          product_id INT NOT NULL,
@@ -54,10 +54,13 @@ async function createTableProducts() {
 // );
 
         await pool.query(query);
+            await pool.query(query2);
+            await pool.query(query3);
+            // await pool.query(query4)
         console.log("table created");
-        let Name='wireless Mouse';
-        let query2=`select * from products where name ilike $1 limit 10 offset 0`;
-       const select= await pool.query(query2,[`%${Name}%`]);
+    //     let Name='wireless Mouse';
+    //     let checkQuery=`select * from products where name ilike $1 limit 10 offset 0`;
+    //    const select= await pool.query(checkQuery,[`%${Name}%`]);
     //    console.log(select.rows)
 
     }
@@ -171,6 +174,7 @@ VALUES
 ;
 `;
             await pool.query(query);
+
             console.log("data inserted");
         }
         catch(err){
