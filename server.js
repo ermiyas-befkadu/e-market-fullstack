@@ -12,7 +12,7 @@ app.use(session({
     resave:false,
     saveUninitialized:false,
     cookie:{
-        secure:false,
+        secure:true,
         sameSite:"lax",
         httpOnly:true,
         maxAge:1000*60*60*24,
@@ -147,5 +147,6 @@ app.post("/addToCart",async(req,res)=>{
     
 
 })
+
 
 app.listen(port,()=>console.log("port opened at ",port));
