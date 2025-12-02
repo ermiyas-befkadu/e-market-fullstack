@@ -1,0 +1,200 @@
+/* Custom CSS Variables for easy color changes */
+:root {
+    --clr-primary: #1E6BF1; /* Deep Purple */
+    --clr-secondary: #FF9F1C; /* Bright Blue */
+    --text-color: #ffffff; /* White text */
+    --accent-color: #4d2e01; /* Orange/Gold accent for links */
+    --clr-error: #e74c3c; /* Bright Red for errors */
+    --clr-success: #2ecc71;
+    --input-bg-color: rgba(255, 255, 255, 0.1); /* Semi-transparent white */
+    --shadow-color: rgba(0, 0, 0, 0.3);
+}
+
+/* --- Base Body and Global Styles --- */
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+}
+
+/* Vibrant Gradient Background */
+body {
+    background: linear-gradient(135deg, var(--clr-primary) 0%, var(--clr-secondary) 100%);
+    display: flex; /* Use flexbox to center content */
+    flex-direction: column;
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+    padding: 20px; /* Add some padding around the edges */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    min-height: 100vh; /* Ensure it takes full viewport height */
+}
+
+/* --- Form and Content Containers --- */
+
+/* Targets .form for login/register and the body for profile/homepage */
+.form, body > h1, body > h2, body > h3, form[action="/logout"] {
+    background: rgba(255, 255, 255, 0.15); /* Semi-transparent white background for content boxes */
+    padding: 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px); /* Glassmorphism effect */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    box-shadow: 0 8px 32px 0 var(--shadow-color); /* Subtle 3D lift */
+    margin-bottom: 20px;
+    width: 100%; /* Full width for mobile */
+    max-width: 400px; /* Max width for desktop readability */
+    box-sizing: border-box;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5em;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 4px var(--shadow-color);
+    margin-bottom: 30px;
+}
+
+/* --- Input Fields and Text Styling --- */
+
+input[type="text"], input[type="password"],input[type="email"] {
+    width: calc(100% - 20px); /* Full width minus padding */
+    padding: 15px 10px;
+    margin-bottom: 15px;
+    border: none;
+    border-radius: 10px;
+    background: var(--input-bg-color);
+    color: var(--text-color);
+    font-size: 1em;
+    transition: background 0.3s, box-shadow 0.3s;
+    box-shadow: inset 0 2px 4px var(--shadow-color);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 0 0 2px var(--accent-color);
+}
+
+/* --- Buttons and Links --- */
+
+.submitButton, form[action="/logout"] button[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+    
+    /* Gradient Button Style */
+    background: linear-gradient(90deg, #ff7e5f, #feb47b); /* Warm gradient */
+    color: var(--clr-primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 15px rgba(255, 126, 95, 0.5);
+}
+
+form[action="/logout"] button[type="submit"] {
+    /* Different color for logout button */
+    background: linear-gradient(90deg, #ff416c, #ff4b2b); /* Red gradient */
+    color: var(--text-color);
+    box-shadow: 0 4px 15px rgba(255, 65, 108, 0.5);
+}
+
+.submitButton:hover, form[action="/logout"] button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 126, 95, 0.7);
+}
+
+.submitButton:active, form[action="/logout"] button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+.submitButton:disabled {
+    cursor: not-allowed !important;
+    opacity: 0.6;
+    background: #ccc !important;
+    box-shadow: none;
+    transform: none;
+}
+
+a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #ffd700; /* Gold hover */
+    text-decoration: underline;
+}
+
+/* --- Error Messages --- */
+
+.errorBox{
+    background-color: var(--clr-error);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(255, 65, 108, 0.4);
+    /* Ensure it appears centered and styled similar to forms */
+    width: 100%;
+    max-width: 400px;
+    box-sizing: border-box;
+}
+
+/* --- Profile Specific Styling --- */
+.fullName, .email {
+    font-weight: bold;
+    color: var(--accent-color);
+    display: inline-block;
+    padding: 0 5px;
+}
+
+/* --- Homepage Link Styling (For the file with only links) --- */
+/* Target the h1 > a elements on the homepage */
+body > h1 a {
+    display: block;
+    padding: 20px;
+    margin: 10px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    font-size: 1.5em;
+    transition: background 0.3s, transform 0.3s;
+}
+
+body > h1 a:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05);
+    text-decoration: none;
+}
+
+/* --- Responsiveness (Optional: Adjusts font size for smaller screens) --- */
+@media (max-width: 600px) {
+    .form, .errorBox, body > h1, body > h2, body > h3, form[action="/logout"] {
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    h1 {
+        font-size: 2em;
+        margin-bottom: 20px;
+    }
+
+    .submitButton {
+        font-size: 1em;
+        padding: 12px;
+    }
+}

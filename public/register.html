@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="loginstyle.css">
+</head>
+<body>
+    <div class="errorBox" style="display: none;">Unkown error</div>
+    <form action="" class="form">
+        <input type="text" name="fullName"class="fullName">
+        <input type="email" name="email" class="email">
+        <input type="password" name="password" class="password">
+        <button type="submit" class="submitButton">Register</button><span>Already have an account? <a href="/login">Login</a></span>
+    </form>
+
+
+<script>
+    const errorBox=document.querySelector('.errorBox');
+    const form=document.querySelector(".form");
+    const submitButton=document.querySelector(".submitButton");
+form.addEventListener('submit',async ()=>{
+    event.preventDefault();
+    const formData=new FormData(form);
+   let data={
+    fullName:formData.get("fullName").trim().toUpperCase(),
+    email:formData.get("email").trim().toUpperCase(),
+    password:formData.get("password")
+   };
+  const result= await fetch("/api/register",{
+    method:"post",
+    headers:{"content-Type":"application/json"},
+    body:JSON.stringify(data)
+  }).then().catch((err)=>{console.log('error ',err)})
+
+  if( result.status===200){
+       location.href='/login';
+        submitButton.disabled=true;
+        submitButton.textContent='already registered'
+        submitButton.style.cursor='not-allowed'
+  }
+  else if(result.status===400){
+    errorBox.innerHTML= await result.json();
+    errorBox.style.display='block';
+        submitButton.disabled=false;
+        submitButton.textContent='Register'
+        submitButton.style.cursor='default'
+  }
+})
+</script>
+</body>
+</html>

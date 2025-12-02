@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+<link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <title>E-market</title>
+    <link rel="stylesheet" href="product-detail.css">
+     <link rel="stylesheet" href="style.css">
+   
+</head>
+<body>
+    <section class="first-page"id="first-page">
+    <header class="main-header" id="main-header">
+        <div class="logo-with-img"id="logo--with-img">
+        <img src="images/logo trimmed.jpg" alt="logo" id="logo-img"class="logo-img">
+        <h1 class="logo"id="logo">E-market</h1></div>
+        <div class="search-input-container" id="search-input-container">
+    <input  class="search-input" id="search-input"><button  class="search-button"><span class="material-symbols-outlined">
+search
+</span></button></div>
+       <nav class="main-nav" id="main-nav">
+            <ul class="nav-list-container" id="nav-list-container">
+                <li ><span class="icon-with-title"><a href="index.html" class="nav-link"><span class="material-symbols-outlined">
+                home
+                </span><span class="icon-title">home</span></span></a></li>
+                <li ><span class="icon-with-title"><a href="products.html" class="nav-link"><span class="material-symbols-outlined">
+                local_mall
+                </span><span class="icon-title">products</span></span></a></li>
+                <li ><span class="icon-with-title"><a href="cart.html" class="nav-link"><span class="material-symbols-outlined">
+                shopping_cart_checkout
+                </span><span class="icon-title">cart</span></span></a></li>
+                <li ><span class="icon-with-title"><a href="profile.html" class="nav-link"><span class="material-symbols-outlined">
+                account_box
+                </span><span class="icon-title">profile</span></span></a></li>
+                <li ><span class="icon-with-title"><a href="contact-us.html" class="nav-link"><span class="material-symbols-outlined">
+                more_vert
+                </span><span class="icon-title">about</span></span></a></li>
+            </ul>   
+    </header>
+        <div class="error-box"style="display:none">
+        item not found.
+    </div>
+    <div class="error404" id="error404" style="display:none">
+        <button href="./products.html" class="back-btn" onclick="location.href='./products.html'"></button>
+    </div>
+    <div class="main-div" id="main-div">
+        <div class="first-partion">
+        <img src="" alt="" class="item-img" id="item-img" ></div>
+        
+        <div class="second-partion">
+        <h2 class="product-name" id="product-name">LOADING...</h2>
+        <p class="product-description" id="product-description">LOADING...</p>
+        <p class="long-product-description" id="long-product-description"></p>
+        <div class="product-review" id="product-review"></div>
+        <div class="currency-type">
+        <span class="product-price" id="product-price"></span>&nbsp;ETB</div>
+        </div>
+        <div class="third-partion" id="third-partion">
+            <div class="currency-type2" id="currency-type2"> <span class="product-price2" id="product-price2"></span ></div>
+            <div class="quantity-with-btn">
+          <input type="number" class="quantity" placeholder="quantity" name="quantity"><span class="computer-btn" type="submit">ADD</span></div>
+         <div class="available-quantity"></div>
+         <div class="yourQuantity"></div>
+          <div class="total-price-container">Total price:  <span class="total-price" id="total-price2"></span></div>
+     
+          <button class="buy-button">BUY NOW</button>
+          <button class="add-to-cart-btn">ADD TO CART</button>
+        </div>
+ </div>
+    
+
+</section>
+<script type="module" >
+    let products;
+const page_url=location.href;
+const page_url_array= page_url.split('=');
+const item_id= Number(page_url_array[1])||null;
+let item_not_found=true;
+
+const computer_btn = document.querySelector('.computer-btn');
+const buy_button = document.querySelector('.buy-button');
+const add_to_cart_btn=document.querySelector('.add-to-cart-btn');
+add_to_cart_btn.addEventListener('click',()=>{
+          event.stopPropagation();
+          add_to_cart_btn.disabled=true;
+          add_to_cart_btn.style.cursor='not-allowed';
+          add_to_cart_btn.textContent='Adding to Cart...';
+          store()})
+
+    let limit=1;
+    let offset=0;
+async function fetchProducts(limit,offset) {
+
+    const condition={
+        limit:limit,
+        offset:offset,
+        id:item_id,
+        name:null
+    }
+    try {
+        await fetch("/api/products",{
+            method:"post",
+            headers:{ "Content-Type": "application/json" },
+            body:JSON.stringify(condition)
+        })
+        .then(res=>res.json()).then( 
+        fetchedProducts=>{products=fetchedProducts[0] ;return products;})
+
+
+    } catch (error) {
+            error_box.style.display='flex';
+        error_box.style.position='fixed';
+        error_box.style.background='var(--clr-error)';
+        error_box.innerHTML=`couldn't load products please <a href='/products'> try again</a>`
+        }
+
+// console.log('pid', productsLength)
+if (products && item_id!=null){
+let p_id =await products.id;
+card_detail_creater();
+
+item_not_found=false;
+error404.style.display='none';
+}
+else{
+    error404.style.display='flex';
+    error404.innerHTML=`item Not found <button onClick="history.back()">go back</button>`;
+    document.querySelector('body').style.overflowY='hidden';
+
+}
+    
+
+function card_detail_creater(){
+const item_img= document.querySelector('.item-img')
+    item_img.src=`${products.image}`;
+    item_img.alt=`image of ${products.name}`;
+const product_name =document.querySelector('.product-name');
+    product_name.innerText=`${products.name}`;
+const product_description = document.querySelector('.product-description');
+    product_description.innerText=`${products.description}`;
+const long_product_description = document.querySelector('.long-product-description');
+    long_product_description.innerText=`${products.longdescription}`;
+const product_price = document.querySelector('.product-price');
+    product_price.innerText=`${products.price}`;
+const balance_div = document.querySelector('.product-price2');
+   balance_div.innerText='Balnace'+ Number( localStorage.getItem('balance'));
+const product_review = document.querySelector('.product-review');
+    product_review.innerText=`Rating:  ${products.review}`;
+const available_quantity_div=document.querySelector('.available-quantity');
+const available_quantity=`${products.quantity}`;
+
+available_quantity_div.innerText=`${available_quantity} items in store`;
+
+
+
+let total_price=document.querySelector('.total-price');
+total_price.innerText=products.price;
+total_price.value=products.price;
+const quantity_input= document.querySelector('.quantity');
+const yourQuantity=document.querySelector(".yourQuantity");
+yourQuantity.textContent='quantity:'+(quantity_input.value||1);
+const third_partion= document.querySelector('.third-partion');
+
+const error404=document.querySelector('.error404');
+const error_box=document.querySelector('.error-box');
+error_box.style.display='none'
+
+   
+computer_btn.addEventListener('click',computer);
+function computer(){
+
+    const quantity_value =Number( quantity_input.value)||1;
+    yourQuantity.textContent=`quantity:  ${quantity_value}`;
+    if (quantity_value<=available_quantity){
+    const selected_item__price = Number(`${products.price}`);
+    let total_value= (selected_item__price * quantity_value*100)/100;
+    total_price.innerText=`${total_value}`;
+        total_price.value=`${total_value}`;
+    quantity_input.value='';
+    computer_btn.value=quantity_value}
+    else {error_box.style.display='flex';
+              quantity_input.value='';
+          error_box.textContent=`Only a maximum of ${available_quantity} item allowed`
+        setTimeout(()=>{error_box.style.display='none'},2000)
+    }
+
+}
+
+buy_button.addEventListener('click',()=>{
+    let total_price2=document.querySelector('.total-price');
+    // total_price.innerText=products.price;
+
+  let transaction_history=JSON.parse( localStorage.getItem('history'));
+
+let quantity=Number( computer_btn.value ||1);
+const price=products[item_id-1].price;
+const id=item_id-1;
+
+if(price<=balance){
+  let   new_balance = balance-price;
+localStorage.setItem('balance',new_balance);
+
+ transaction_history.unshift(`{${id+1},${quantity}}`);
+ localStorage.setItem('history',JSON.stringify( transaction_history));
+
+error_box.style.display='flex';
+error_box.style.background='var(--clr-success)';
+error_box.textContent='successfull transaction';
+setTimeout(()=>{error_box.style.display='none'},2500);
+balance=localStorage.getItem('balance');
+balance_div.innerText=balance;}
+else{
+    
+error_box.style.display='flex';
+error_box.style.background='var(--clr-error)';
+error_box.textContent='total price is over your balance';
+setTimeout(()=>{error_box.style.display='none'},2500);
+
+
+}
+})
+
+ 
+}
+
+
+    }
+fetchProducts(limit,offset);
+
+
+
+
+
+
+
+    
+        if(!localStorage.getItem('history')){localStorage.setItem('history',JSON.stringify ([]))}
+
+
+let balance=localStorage.getItem('balance')||localStorage.setItem('balance',20000.01);
+
+
+
+
+
+
+const error_box=document.querySelector('.error-box');
+
+async function  store(){
+    const data={
+        productId:item_id,
+        quantity:computer_btn.value
+    }
+const result= await fetch("/addToCart",{
+    method:"post",
+    headers:{"content-Type":"application/json"},
+    body:JSON.stringify(data)
+});
+if (result.status===200){
+    error_box.style.background='var(--clr-success)';
+    error_box.textContent= await result.json();
+    error_box.style.display='flex';
+
+
+setTimeout(()=>{error_box.style.display='none'},2500);
+
+}
+else if(result.status===404||result.status===400){
+    error_box.style.background='var(--clr-error)';
+    error_box.textContent= await result.json();
+    error_box.style.display='flex';
+    setTimeout(()=>{error_box.style.display='none'},2500);
+}
+          add_to_cart_btn.disabled=false;
+          add_to_cart_btn.style.cursor='default';
+          add_to_cart_btn.textContent='ADD TO CART';
+}
+
+
+const search_input= document.querySelector('.search-input');
+
+ let search_input_value =search_input.value;
+const search_button=document.querySelector('.search-button');
+search_button.addEventListener('click',()=>{  
+   search_input_value =search_input.value.trim().toLowerCase();
+  location.href=`./products.html?search=${search_input_value}`;})
+
+
+
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+:root {
+  /* Primary brand color (trust, CTA buttons, links) */
+  --clr-primary: #1E6BF1; /* vivid blue */
+
+  /* Tints & shades for hover and accents */
+  --clr-primary-light: #5a93f8;
+  --clr-primary-dark: #124bb3;
+
+  /* Secondary (for highlights or category tags) */
+  --clr-secondary: #FF9F1C; /* warm orange accent */
+  --clr-tertiary: rgb(164,88,199);
+
+  /* Neutral palette (for backgrounds, cards, text) */
+  --clr-bg: #ffffff;
+  --clr-bg-alt: #f5f7fa;
+  --clr-surface: #ffffff;
+  --clr-border: #e1e5eb;
+
+  /* Text colors */
+  --clr-text: #1a1a1a;
+  --clr-text-muted: #555f6d;
+  --clr-text-inverse: #ffffff;
+
+  /* Status colors */
+  --clr-success: #2ecc71;
+  --clr-warning: #f1c40f;
+  --clr-error: #e74c3c;
+}
+body{ 
+    font-family: "Zalando Sans SemiExpanded", sans-serif;
+  font-optical-sizing: auto;}
+.hero-section{
+    width: 100%;
+    height: fit-content;
+    min-height: 100vh;
+    margin-top: -7px;
+}
+header{
+    
+    color: var(--clr-primary);
+    padding: 10px 0;
+    margin-top: 0px;
+    margin-left:4px;
+    margin-right:4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo-img{
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.logo-with-img{
+    display: inline-block;
+    margin: 4px;
+    min-width: fit-content;
+}
+.logo{
+    display: inline-block;
+    font-size: 24px;
+    font-weight: bold;
+}
+.nav-list-container{
+    list-style-type: none;
+    margin: 4px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    min-width: fit-content;
+   
+}
+.icon-with-title{
+    font-size: 10px;
+    margin: 0;
+    display: flex;
+    align-content: center;
+    justify-items: center;
+}
+.material-symbols-outlined{
+    display: flex;
+    justify-content: center;
+}
+.icon-title{
+    color: var(--clr-text-muted);
+}
+.nav-link{
+text-decoration: none;
+color: var(--clr-text);
+font-weight: bold;
+}
+.nav-link:hover{
+text-decoration: none;
+color: var(--clr-primary);
+font-weight: bold;
+scale: 1.2;
+}
+.search-input-container{
+    display: flex;
+    justify-content: center;
+    margin: 0 0 0 15px ;
+    width: 80%;
+    min-width: 150px;
+}
+.search-input{
+    width: 80%;
+    height: 20px;
+    border: 1px solid var(--clr-text-muted);
+    border-radius: 5px;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+
+    
+    
+}
+.search-button{
+    text-decoration: none;
+    width: 50px;
+    height: 30px;
+    background-color: var(--clr-primary);
+    color: var(--clr-text-inverse);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.products-list{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 15px;
+    /* padding: 20px; */
+     justify-items: center;
+   
+}/* ========================================
+  CSS for Cart Product Card
+  ========================================
+*/
+
+/* --- Root Variables --- */
+:root {
+  --primary-color: #0d6efd;   /* Blue */
+  --secondary-color: #ffc107; /* Yellow */
+  --text-color: #212529;
+  --text-muted: #6c757d;
+  --bg-color: #ffffff;
+  --border-color: #dee2e6;
+  --card-shadow: 0 3px 6px rgba(0, 0, 0, 0.07);
+}
+
+/* --- General Page Styles (for context) --- */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #f8f9fa; /* Light gray page background */
+  color: var(--text-color);
+  padding: 20px; /* So you can see the card */
+}
+
+/* --- Product Card Styling --- */
+.product-card {
+  display: grid;
+  /* Define 3 columns: Image (100px), Text (fills space), Button (auto-width) */
+  grid-template-columns: 100px 1fr auto;
+  gap: 15px; /* Space between columns */
+  align-items: center; /* Vertically center all items */
+  
+  max-width: 700px; /* Max width of the cart item */
+  margin: 15px auto; /* Center the card for demo */
+  padding: 15px;
+  
+  background-color: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+}
+
+/* --- 1. Image Column --- */
+.item-img-container {
+  width: 100px;
+  height: 100px;
+  border-radius: 5px;
+  overflow: hidden; /* Clips the image to the border-radius */
+}
+
+.item-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Prevents image from stretching */
+}
+
+/* --- 2. Text Column (Elements stack automatically) --- */
+.product-name {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--primary-color); /* Use primary color */
+  margin: 0;
+}
+
+.product-description {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 5px 0 0 0;
+  /* Optional: Limit lines for cleanliness */
+  display: -webkit-box;
+  /* -webkit-line-clamp: 2; */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-price {
+  display: block; /* Ensures it's on its own line */
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-top: 8px;
+}
+
+/* --- 3. Button Column --- */
+.remove-from-cart-button {
+  /* We'll make this a subtle, circular icon button */
+  background-color: transparent;
+  background-color: var(--clr-error);
+  border: 1px solid var(--border-color);
+  color: var(--clr-text);
+  
+  /* Sizing and Shape */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* Makes it a circle */
+  
+  /* Icon alignment */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  /* Aligns button to the far right of its grid cell */
+  justify-self: end; 
+}
+
+/* Use secondary color for the hover effect */
+.remove-from-cart-button:hover {
+  background-color: var(--clr-error);
+  color: var(--clr-text-inverse); /* Dark text on yellow */
+}
+
+.remove-from-cart-button .material-symbols-outlined {
+  font-size: 1.25rem; /* Adjust icon size */
+}
+.buy-button{
+  border: none;
+  background: var(--clr-success);
+  height: 30px;
+}
+.buy-button:hover{
+  background: var(--clr-secondary);
+}
+/* --- 1. Small Desktops / Large Tablets (<= 1024px) --- */
+@media (max-width: 1024px) {
+    .search-input-container {
+        /* Reduce search bar width to give nav more space */
+        width: 60%;
+    }
+}
+
+/* --- 2. Tablets (<= 768px) --- */
+@media (max-width: 768px) {
+    
+    /* --- Header Stacking --- */
+    header {
+        flex-wrap: wrap; /* Allow header items to wrap */
+        justify-content: space-between;
+        padding: 10px 15px; /* Add padding to header */
+        margin: 0;
+    }
+
+    .logo-with-img {
+        order: 1; /* Logo first */
+    }
+
+    .main-nav {
+        order: 2; /* Nav second */
+    }
+
+    .search-input-container {
+        order: 3; /* Search bar third (wraps to new line) */
+        width: 100%; /* Full width search bar */
+        margin: 15px 0 0 0; /* Add space above */
+        min-width: unset; /* Remove min-width */
+    }
+
+    .search-input {
+        width: 100%; /* Make input fill container */
+    }
+
+    /* --- Hide Nav Text, Show Icons --- */
+    .icon-title {
+        display: none; /* Hide text like "home", "products" */
+    }
+
+    .nav-link {
+        padding: 5px; /* Give icons more touch area */
+    }
+    
+    .icon-with-title {
+        font-size: 14px;
+    }
+
+    .material-symbols-outlined {
+        font-size: 28px; /* Make icons larger */
+    }
+}
+
+
+/* --- 3. Mobile (<= 480px) --- */
+@media (max-width: 480px) {
+    header {
+        padding: 10px;
+    }
+
+    .logo {
+        font-size: 20px; /* Smaller logo text */
+    }
+
+    .logo-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .nav-list-container {
+        gap: 8px; /* Tighter icon spacing */
+    }
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="loginstyle.css">
+</head>
+<body>
+    <div class="errorBox"style="display: none;"></div>
+    <form action="" class="form">
+        <label for="email">Email</label>
+        <input type="email" name="email" class="email">
+        <label for="password">Password</label>
+        <input type="password"class="password" name="password">
+        <button type="submit" class="submitButton">Login</button><span>New here? <a href="/register">register</a></span>
+    </form>
+
+<script>
+    const errorBox=document.querySelector('.errorBox');
+    const form=document.querySelector(".form");
+    const submitButton=document.querySelector(".submitButton");
+
+
+
+    async function fetcher(){
+    const formData=new FormData(form);
+        const data={
+        email:formData.get("email").trim().toUpperCase(),
+        password:formData.get("password")
+    };
+     try {
+        const result= await fetch("/api/login",{
+        method:"post",
+        headers:{"content-Type":"application/json"},
+        body:JSON.stringify(data)
+        })
+        
+    
+    if( result.status===200){
+        errorBox.textContent=await result.json();
+        errorBox.style.background='var(--clr-success)'
+        errorBox.style.display='block';
+        location.href='/profile';
+        submitButton.disabled=true;
+        submitButton.textContent='already logined'
+        submitButton.style.cursor='not-allowed'
+    }
+    else if( result.status===400){
+        errorBox.textContent=await result.json();
+        errorBox.style.display='block'; 
+        submitButton.disabled=false;
+        submitButton.textContent='Login'
+        submitButton.style.cursor='default'       
+    }
+    else{
+        errorBox.textContent='unkown error. please try again';
+        errorBox.style.display='block';      
+        submitButton.disabled=false;
+        submitButton.textContent='Login'
+        submitButton.style.cursor='default'  
+    }        
+    } catch (error) {
+        errorBox.textContent="server busy. please try again later";
+        errorBox.style.display="block";
+    }
+
+    };
+    form.addEventListener('submit',async()=>{
+        event.preventDefault();
+        submitButton.disabled=true;
+        submitButton.textContent='Loading...'
+        submitButton.style.cursor='not-allowed'
+        fetcher();
+
+    });
+
+</script>
+</body>
+</html>

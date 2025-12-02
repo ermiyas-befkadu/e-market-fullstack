@@ -1,0 +1,385 @@
+:root {
+  /* Primary brand color (trust, CTA buttons, links) */
+  --clr-primary: #1E6BF1; /* vivid blue */
+
+  /* Tints & shades for hover and accents */
+  --clr-primary-light: #5a93f8;
+  --clr-primary-dark: #124bb3;
+
+  /* Secondary (for highlights or category tags) */
+  --clr-secondary: #FF9F1C; /* warm orange accent */
+  --clr-tertiary: rgb(164,88,199);
+
+  /* Neutral palette (for backgrounds, cards, text) */
+  --clr-bg: #ffffff;
+  --clr-bg-alt: #f5f7fa;
+  --clr-surface: #ffffff;
+  --clr-border: #e1e5eb;
+
+  /* Text colors */
+  --clr-text: #1a1a1a;
+  --clr-text-muted: #555f6d;
+  --clr-text-inverse: #ffffff;
+
+  /* Status colors */
+  --clr-success: #2ecc71;
+  --clr-warning: #f1c40f;
+  --clr-error: #e74c3c;
+}
+body{ 
+    font-family: "Zalando Sans SemiExpanded", sans-serif;
+  font-optical-sizing: auto;}
+.hero-section{
+    width: 100%;
+    height: fit-content;
+    min-height: 100vh;
+    margin-top: -7px;
+    /* Added overflow-x to prevent horizontal scrolling */
+    overflow-x: hidden; 
+}
+header{
+    
+    color: var(--clr-primary);
+    padding: 10px 0;
+    margin-top: 0px;
+    margin-left:4px;
+    margin-right:4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.logo-img{
+    width: 50px;
+    height: 50px;
+    vertical-align: middle;
+    margin-right: 10px;
+}
+.logo-with-img{
+    display: inline-block;
+    margin: 4px;
+    min-width: fit-content;
+}
+.logo{
+    display: inline-block;
+    font-size: 24px;
+    font-weight: bold;
+}
+.nav-list-container{
+    list-style-type: none;
+    margin: 4px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    min-width: fit-content;
+    
+}
+.icon-with-title{
+    font-size: 10px;
+    margin: 0;
+    display: flex;
+    align-content: center;
+    justify-items: center;
+}
+.material-symbols-outlined{
+    display: flex;
+    justify-content: center;
+}
+.icon-title{
+    color: var(--clr-text-muted);
+}
+.nav-link{
+text-decoration: none;
+color: var(--clr-text);
+font-weight: bold;
+}
+.nav-link:hover{
+text-decoration: none;
+color: var(--clr-primary);
+font-weight: bold;
+scale: 1.2;
+}
+.search-input-container{
+    display: flex;
+    justify-content: center;
+    margin: 0 0 0 15px ;
+    width: 80%;
+    min-width: 150px;
+}
+.search-input{
+    width: 80%;
+    height: 30px;
+    border: 1px solid var(--clr-text-muted);
+    border-radius: 5px;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+    
+    
+}
+.search-button{
+    text-decoration: none;
+    width: 50px;
+    height: 30px;
+    background-color: var(--clr-primary);
+    color: var(--clr-text-inverse);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.hero-content-with-img{
+     display: flex;
+     margin: 100px 0 0 0;
+     /* Added for smoother flex wrapping */
+     align-items: center;
+}
+.hero-content{
+    width: 40vw;
+    min-width: 350px;
+    display: flex;
+    flex-direction: column;
+    margin: 30px;
+    align-content: flex-end;
+    z-index: 1;
+
+}
+
+.hero-title{
+    font-size: 36px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: var(--clr-primary-dark);
+    display: inline-block;
+    justify-content: center;
+    margin-bottom: 0px;
+}
+.market-name{
+    color: var(--clr-secondary);
+    font-size: 36px;
+    /* -webkit-text-stroke: var(--clr-text) .5px;
+      font-family: "Nunito Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100,
+    "YTLC" 500; */
+}
+.hero-subtitle{
+    font-size: 18px;
+    margin-bottom: 20px;
+    color: var(--clr-text-muted);
+    display: flex;
+    justify-content: center;
+    margin: 0 0 0 0 ;
+}
+.hero-paragraph{
+    margin: 30px 0 0 4px ;
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: var(--clr-text);
+    display: flex;
+    justify-content: start;
+   }
+.hero-section-img{
+    display: inline-block;
+    width: 700px;
+    aspect-ratio: 16/8;
+    justify-content: center;
+    margin: 0 0 0 -30px;
+    /* Added for responsiveness */
+    max-width: 100%;
+    height: auto;
+    
+}
+.hero-cta-button-container{
+    display: flex;
+    justify-content: center;
+    align-content: flex-end;
+    /* align-items: flex-end; */
+}   
+.hero-cta-button{
+    text-decoration: none;
+    width: 150px;
+    height: 40px;
+    background-color: var(--clr-secondary);
+    color: var(--clr-text);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+.hero-cta-button:hover{
+background-color: var(--clr-primary);
+transform: 5s ease;
+color:var(--clr-text-inverse) ;
+}
+
+/* ===============================================
+  RESPONSIVE MEDIA QUERIES
+===============================================
+*/
+
+/* --- 1. Small Desktops / Large Tablets (<= 1024px) --- */
+@media (max-width: 1024px) {
+    .search-input-container {
+        /* Reduce search bar width to give nav more space */
+        width: 60%;
+    }
+
+    .hero-content-with-img {
+        margin-top: 50px;
+    }
+
+    .hero-content {
+        width: 50%; /* Give content and image equal space */
+        min-width: 300px;
+        margin: 15px;
+    }
+
+    .hero-section-img {
+        width: 50%; /* Make image flexible */
+        margin: 0 15px 0 0; /* Adjust margin */
+    }
+
+    .hero-title,
+    .market-name {
+        font-size: 30px; /* Slightly smaller title */
+    }
+}
+
+
+/* --- 2. Tablets (<= 768px) --- */
+@media (max-width: 768px) {
+    
+    /* --- Header Stacking --- */
+    header {
+        flex-wrap: wrap; /* Allow header items to wrap */
+        justify-content: space-between;
+        padding: 10px 15px; /* Add padding to header */
+        margin: 0;
+    }
+
+    .logo-with-img {
+        order: 1; /* Logo first */
+    }
+
+    .main-nav {
+        order: 2; /* Nav second */
+    }
+
+    .search-input-container {
+        order: 3; /* Search bar third (wraps to new line) */
+        width: 100%; /* Full width search bar */
+        margin: 15px 0 0 0; /* Add space above */
+        min-width: unset; /* Remove min-width */
+    }
+
+    .search-input {
+        width: 100%; /* Make input fill container */
+    }
+
+    /* --- Hide Nav Text, Show Icons --- */
+    .icon-title {
+        display: none; /* Hide text like "home", "products" */
+    }
+
+    .nav-link {
+        padding: 5px; /* Give icons more touch area */
+    }
+    
+    .icon-with-title {
+        font-size: 14px;
+    }
+
+    .material-symbols-outlined {
+        font-size: 28px; /* Make icons larger */
+    }
+
+    /* --- Hero Stacking --- */
+    .hero-content-with-img {
+        flex-direction: column; /* Stack content and image vertically */
+        margin-top: 30px;
+    }
+
+    .hero-section-img {
+        order: 1; /* Show image *first* on tablet/mobile */
+        width: 90%;
+        max-width: 450px; /* Constrain image size */
+        margin: 0 0 20px 0; /* Remove side margin, add bottom margin */
+    }
+
+    .hero-content {
+        order: 2; /* Show text *second* */
+        width: 90%;
+        min-width: unset; /* Remove min-width */
+        margin: 0;
+        align-items: center; /* Center-align content */
+        text-align: center;
+    }
+
+    .hero-paragraph {
+        text-align: center;
+        justify-content: center; /* Center the paragraph text */
+        margin: 20px 0 0 0;
+    }
+
+    .hero-title,
+    .market-name {
+        font-size: 28px;
+    }
+
+    .hero-subtitle {
+        font-size: 16px;
+        justify-content: center;
+    }
+}
+
+
+/* --- 3. Mobile (<= 480px) --- */
+@media (max-width: 480px) {
+    header {
+        padding: 10px;
+    }
+
+    .logo {
+        font-size: 20px; /* Smaller logo text */
+    }
+
+    .logo-img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .nav-list-container {
+        gap: 8px; /* Tighter icon spacing */
+    }
+
+    .hero-content {
+        width: 95%; /* Use slightly more screen width */
+    }
+
+    .hero-section-img {
+        width: 95%;
+    }
+
+    .hero-title,
+    .market-name {
+        font-size: 24px; /* Final font size adjustment */
+    }
+
+    .hero-cta-button {
+        width: 90%; /* Make CTA button larger */
+        max-width: 300px;
+    }
+}
