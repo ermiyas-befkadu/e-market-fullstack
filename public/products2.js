@@ -32,11 +32,11 @@ async function fetchProducts(limit,offset) {
     const condition={
         limit:limit,
         offset:offset,
-        id:null,
+        id:id,
         name:Name,
     }
     try {
-        await fetch("/api/products",{
+        await fetch("/search/products",{
             method:"post",
             headers:{ "Content-Type": "application/json" },
             body:JSON.stringify(condition)

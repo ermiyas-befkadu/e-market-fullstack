@@ -12,7 +12,7 @@ app.use(session({
     resave:false,
     saveUninitialized:false,
     cookie:{
-        secure:true,
+        secure:false,
         sameSite:"lax",
         httpOnly:true,
         maxAge:1000*60*60*24,
@@ -35,9 +35,8 @@ pool.connect().then(()=>{
 
 app.get("/",(req,res)=>{
     res.sendFile(path.join(__dirname,"public/index.html"));
-})
-
-app.post("/api/products",async(req,res)=>{
+});
+app.post("/search/products",async(req,res)=>{
     const{limit,offset,id,name}= await req.body;
 
     let query;
@@ -51,7 +50,6 @@ try {
 
     if(!id&&!name){ products= await pool.query(query,[limit,offset])}
     else if(id||name){products=(id!==null)? await pool.query(query,[limit,offset,id]):await pool.query(query,[limit,offset,`%${name}%`]);};
-
      return res.status(200).json(products.rows);
      
 
@@ -60,16 +58,11 @@ try {
 }
 
 });
-
-app.get("/products",(req,res)=>{
+app.get("/products/",(req,res)=>{
     res.sendFile(path.join(__dirname,"public/products2.html"))
 });
 app.get("/product-detail",(req,res)=>{
     res.sendFile(path.join(__dirname,"public/product-detail.html"))
-});
-app.get("/profile",(req,res)=>{
-    if(!req.session.userId){return res.redirect("/register")}
-    res.sendFile(path.join(__dirname,"public/profile.html"))
 });
 app.get("/register",(req,res)=>{
     if(req.session.userId){return res.redirect("/profile");}
@@ -112,6 +105,20 @@ app.post("/api/login",async(req,res)=>{
     req.session.userId=userId;
     return res.status(200).json(`successful login attempt`);
 });
+app.get("/profile",(req,res)=>{
+    if(!req.session.userId){return res.redirect("/register")}
+    res.sendFile(path.join(__dirname,"public/profile.html"))
+});
+app.post("/api/me",async(req,res)=>{
+ if(!req.session.userId){return res.status(400).json('please login first');};
+ const userId=req.session.userId;
+ try {
+    const user=await pool.query(`select fullName,email from buyers where id=$1`,[userId]); 
+    return res.status(200).json(user.rows[0])
+ } catch (error) {
+    console.log(error);
+ }
+});
 app.post("/logout",async(req,res)=>{
     if(!req.session.userId){return res.redirect("/register");};
     req.session.destroy();
@@ -119,7 +126,7 @@ app.post("/logout",async(req,res)=>{
     return res.status(200).json('logging out')
 });
 app.post("/addToCart",async(req,res)=>{
-    if(!req.session.userId){console.log("returned");return res.status(400).json("you first need to log in")}
+    if(!req.session.userId){return res.status(500).json("you first need to log in")}
     const{productId}=req.body;
     const quantity=req.body.quantity||1;
     const userId=await req.session.userId;
@@ -136,17 +143,37 @@ app.post("/addToCart",async(req,res)=>{
         console.log(error)
     }
 
-
+ 
     const insertQuery=`insert into cart_items(user_id,product_id,quantity) values($1,$2,$3)ON CONFLICT (user_id, product_id) DO NOTHING;`
     try {
         pool.query(insertQuery,[userId,productId,quantity]);
         return res.status(200).json('added to cart')
     } catch (error) {
-        return res.status(400).json(`Couldn't add to cart. please try again later`)
+        return res.status(400).json(`Couldn't add to cart. please try again later`);
     }
     
 
+});
+app.get("/cart",(req,res)=>{
+    if(!req.session.userId){return redirect("/login")};
+    return res.sendFile(path.join(__dirname,"public/cart.html"))
+});
+app.post("/api/cart",async(req,res)=>{
+    if(!req.session.userId){return res.status(500).json("please login first")};
+    const{limit,offset}=req.body;
+    if(limit<1&&limit>50){limit=50};
+    const userId=req.session.userId;
+    const cart=await pool.query(`select * from cart_items where user_id=$1 limit $2 offset $3`,[userId,limit,offset]);
+    if(cart.rowCount===0){return res.status(404).json('No item found in your cart');};
+    let cart_item=[]
+    for(let k=0;k<cart.rowCount;k++){
+        let productId=cart.rows[k].product_id;
+        const item=await pool.query(`select * from products where id=$1 `,[productId]);
+        cart_item.push(item.rows[0]);
+       
+    }
+    console.log(cart.rows);
+    return res.status(200).json(cart_item)
 })
-
 
 app.listen(port,()=>console.log("port opened at ",port));

@@ -42,7 +42,8 @@ search
             </ul>   
     </header>
     <div class="profile">
-    <div class="picture-container"><img src="/images/profile-picture.jpg" alt="profile-picture" class="picture"><span class="user-name">Achilles</span><span class="edit-name">edit name</span></div>
+    <div class="picture-container"><img src="/images/profile-picture.jpg" alt="profile-picture" class="picture"><span class="fullName"id="fullName">Loading</span><span class="edit-name" disabled>edit name</span>
+    <div class="email" id="email">Loading</div></div>
 <div class="balance-div">00.00</div>
 <button class="recharge-button">Recharge balance</button>
 <form action="/logout"class="form" ><button type="submit" class="submitButton">Log out</button></form>
@@ -60,8 +61,24 @@ search
 
 </body>
 <script>
+    const picture=document.querySelector(".picture");
+    const editName=document.querySelector("edit-name");
+    const fullName=document.getElementById("fullName")
+    const email=document.getElementById("email")
     const form=document.querySelector(".form");
     const logoutButton=document.querySelector(".submitButton");
+
+    async function fetchUser(){
+        const data =await fetch("/api/me",{
+            method:"post",
+            headers:{"content-Type":"application/json"}
+        });
+        const user=await data.json();
+    fullName.textContent=user.fullname;
+    email.textContent=user.email;
+    };
+    fetchUser();
+
     form.addEventListener('submit',async()=>{
         event.preventDefault();
        const result= await fetch("/logout",{
@@ -72,72 +89,75 @@ search
             return location.href='/login'
         }
     });
+
+
+    
 </script>
 <script type="module">
-    import {products} from './data.js';
-    let id,quantity;
-    const balance_div=document.querySelector('.balance-div');
+//     import {products} from './data.js';
+//     let id,quantity;
+//     const balance_div=document.querySelector('.balance-div');
 
-let balance=localStorage.getItem('balance')||localStorage.setItem('balance',20000.01);
-balance_div.innerText=balance;
-const recharge_btn=document.querySelector('.recharge-button');
-recharge_btn.addEventListener('click',()=>{
-   let ammount= prompt('enter the amount to recharge',100);
-      if(!ammount){return}
-   if(ammount<=20000){
-   localStorage.setItem('balance',ammount);
-    balance=localStorage.getItem('balance')||0;
-   balance_div.innerText=balance;}
+// let balance=localStorage.getItem('balance')||localStorage.setItem('balance',20000.01);
+// balance_div.innerText=balance;
+// const recharge_btn=document.querySelector('.recharge-button');
+// recharge_btn.addEventListener('click',()=>{
+//    let ammount= prompt('enter the amount to recharge',100);
+//       if(!ammount){return}
+//    if(ammount<=20000){
+//    localStorage.setItem('balance',ammount);
+//     balance=localStorage.getItem('balance')||0;
+//    balance_div.innerText=balance;}
 
-   else{alert('ammount can not exced 20,000');}
-})
-const user_name_div=document.querySelector('.user-name');
-let user_name= localStorage.getItem('user-name')||localStorage.setItem('user-name','Your Name');
-user_name=localStorage.getItem('user-name')
-user_name_div.innerText=user_name
-const edit_name_btn=document.querySelector('.edit-name');
-edit_name_btn.addEventListener('click',()=>{
-  let new_name=  prompt('enter your name','your name');
-  if(!new_name){return;}
-  localStorage.setItem('user-name',new_name)
-  user_name_div.innerText=localStorage.getItem('user-name');
-})
+//    else{alert('ammount can not exced 20,000');}
+// })
+// const user_name_div=document.querySelector('.user-name');
+// let user_name= localStorage.getItem('user-name')||localStorage.setItem('user-name','Your Name');
+// user_name=localStorage.getItem('user-name')
+// user_name_div.innerText=user_name
+// const edit_name_btn=document.querySelector('.edit-name');
+// edit_name_btn.addEventListener('click',()=>{
+//   let new_name=  prompt('enter your name','your name');
+//   if(!new_name){return;}
+//   localStorage.setItem('user-name',new_name)
+//   user_name_div.innerText=localStorage.getItem('user-name');
+// })
 
-const search_input= document.querySelector('.search-input');
+// const search_input= document.querySelector('.search-input');
 
- let search_input_value =search_input.value;
-const search_button=document.querySelector('.search-button');
-search_button.addEventListener('click',()=>{  
-     search_input_value =search_input.value.trim().toLowerCase();
-    location.href=`./products.html?search=${search_input_value}`;})
+//  let search_input_value =search_input.value;
+// const search_button=document.querySelector('.search-button');
+// search_button.addEventListener('click',()=>{  
+//      search_input_value =search_input.value.trim().toLowerCase();
+//     location.href=`./products.html?search=${search_input_value}`;})
 
 
 
-    const transactionsList = document.getElementById('transactions-list');
+//     const transactionsList = document.getElementById('transactions-list');
 
-    function formatCurrency(n){
-        return Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
-    }
-   let transactions=JSON.parse( localStorage.getItem('history'));
+//     function formatCurrency(n){
+//         return Number(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+//     }
+//    let transactions=JSON.parse( localStorage.getItem('history'));
 
-    function renderTransactions(id,quantity){
-        if(!transactions || transactions.length==0){
-            transactionsList.innerHTML = '<p class="no-transactions">No transactions yet.</p>';
-            return;
-        }
+//     function renderTransactions(id,quantity){
+//         if(!transactions || transactions.length==0){
+//             transactionsList.innerHTML = '<p class="no-transactions">No transactions yet.</p>';
+//             return;
+//         }
 
-        transactionsList.innerHTML = `
-            <div class="transaction-card">
-                <img src="${products[id].image}" alt="${products[id].name}" class="transaction-img">
-                <div class="txn-details">
-                    <div class="txn-name">${products[id].name}</div>
-                    <div class="txn-meta">Quantity: <span class="txn-amount">${quantity}</span></div>
-                </div>
+//         transactionsList.innerHTML = `
+//             <div class="transaction-card">
+//                 <img src="${products[id].image}" alt="${products[id].name}" class="transaction-img">
+//                 <div class="txn-details">
+//                     <div class="txn-name">${products[id].name}</div>
+//                     <div class="txn-meta">Quantity: <span class="txn-amount">${quantity}</span></div>
+//                 </div>
               
-            </div>
-        `,        console.log('id=',id,typeof(id),typeof(quantity),'  quan=',quantity);;
+//             </div>
+//         `,        console.log('id=',id,typeof(id),typeof(quantity),'  quan=',quantity);;
   
-    }
+//     }
 
     // Try to read transactions from localStorage; fall back to sample data
     // let storedTxns = null;
@@ -148,15 +168,14 @@ search_button.addEventListener('click',()=>{
     //     {id:2, img:'images/products/sample2.jpg', name:'Bluetooth Headset', amount:2, price:799.50},
     //     {id:3, img:'images/products/sample3.jpg', name:'Coffee Mug', amount:3, price:149.99}
     // ];
-    for(let i=0;i<transactions.length;i++){
+//     for(let i=0;i<transactions.length;i++){
         
-             let transaction_array =transactions[i].replaceAll('{','').replaceAll('}','').split(',');
-              id = Number( transaction_array[0]);
-              quantity =Number( transaction_array[1]);
+//              let transaction_array =transactions[i].replaceAll('{','').replaceAll('}','').split(',');
+//               id = Number( transaction_array[0]);
+//               quantity =Number( transaction_array[1]);
 
-             renderTransactions(id,quantity);
-    }
+//              renderTransactions(id,quantity);
+//     }
 
-</script>
-
+ </script>
 </html>

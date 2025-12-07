@@ -1,13 +1,30 @@
 
-import { products} from "./data.js";
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  console.log(cart.length);
-  let card_value;
-for (let k=0;k<cart.length;k++){
- let i=cart[k]-1;
-
-card_creater(i);
+// import { products} from "./data.js";
+//   let cart = JSON.parse(localStorage.getItem('cart')) || [];
+//   console.log(cart.length);
+//   let card_value;
+let cart;
+let limit=3;
+let offset=0;
+async function fetchCart(){
+  const data=await fetch("/api/cart",{
+    method:"post",
+    headers:{"content-Type":"application/json"},
+    body:JSON.stringify({
+      limit:limit,
+      offset:offset
+    })
+  })
+  const cart_items= await data.json();
+  console.log(cart_items);
+  return cart_items;
 }
+fetchCart();
+
+//  for (let k=0;k<cart.length;k++){
+//   let i=cart[k]-1;
+//  card_creater(i);
+//  }
 
 
 

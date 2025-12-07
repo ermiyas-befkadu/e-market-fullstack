@@ -103,7 +103,7 @@ async function fetchProducts(limit,offset) {
         name:null
     }
     try {
-        await fetch("/api/products",{
+        await fetch("/search/products",{
             method:"post",
             headers:{ "Content-Type": "application/json" },
             body:JSON.stringify(condition)

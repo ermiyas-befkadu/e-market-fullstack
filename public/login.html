@@ -22,7 +22,7 @@
     const submitButton=document.querySelector(".submitButton");
 
 
-
+ 
     async function fetcher(){
     const formData=new FormData(form);
         const data={
@@ -38,7 +38,7 @@
         
     
     if( result.status===200){
-        errorBox.textContent=await result.json();
+        errorBox.textContent= await result.json();
         errorBox.style.background='var(--clr-success)'
         errorBox.style.display='block';
         location.href='/profile';
