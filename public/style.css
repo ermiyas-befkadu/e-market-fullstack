@@ -105,9 +105,14 @@ scale: 1.2;
     width: 80%;
     min-width: 150px;
 }
+.searchForm{
+ width: 100%;
+ display: flex;
+ flex-direction: row;
+}
 .search-input{
     width: 80%;
-    height: 30px;
+    height: 20px;
     border: 1px solid var(--clr-text-muted);
     border-radius: 5px;
     padding: 5px 10px;

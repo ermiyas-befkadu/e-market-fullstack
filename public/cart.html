@@ -12,7 +12,7 @@
 
     <title>E-market</title>
     <link rel="stylesheet" href="cart.css">
-    <script src="cart.js" type="module"></script>
+    <script src="cart.js" defer></script>
    
 </head>
 <body>
@@ -27,23 +27,24 @@ search
 </span></button></div>
        <nav class="main-nav" id="main-nav">
             <ul class="nav-list-container" id="nav-list-container">
-                <li ><span class="icon-with-title"><a href="index.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/" class="nav-link"><span class="material-symbols-outlined">
                 home
                 </span><span class="icon-title">home</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="products.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/products" class="nav-link"><span class="material-symbols-outlined">
                 local_mall
                 </span><span class="icon-title">products</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="#cart" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/cart" class="nav-link"><span class="material-symbols-outlined">
                 shopping_cart_checkout
                 </span><span class="icon-title">cart</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="profile.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/profile" class="nav-link"><span class="material-symbols-outlined">
                 account_box
                 </span><span class="icon-title">profile</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="./contact-us.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/contact-us" class="nav-link"><span class="material-symbols-outlined">
                 more_vert
                 </span><span class="icon-title">about</span></span></a></li>
             </ul>   
     </header>
+    <div class="errorBox" id="errorBox"  style="display: none;z-index: 2;"></div>
     <div class="products-list" id="products-list">
 
      <!-- <div class="product-card" id="product-card">
@@ -58,6 +59,9 @@ add_shopping_cart
 <button>BUY</button>
         </div> -->
     </div>
+    <div class="more" id="more">
+    <button class="moreButton" id="moreButton">More...</button></div>
+
 </section>
 
 </body>

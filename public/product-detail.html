@@ -25,19 +25,19 @@ search
 </span></button></div>
        <nav class="main-nav" id="main-nav">
             <ul class="nav-list-container" id="nav-list-container">
-                <li ><span class="icon-with-title"><a href="index.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/" class="nav-link"><span class="material-symbols-outlined">
                 home
                 </span><span class="icon-title">home</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="products.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/products" class="nav-link"><span class="material-symbols-outlined">
                 local_mall
                 </span><span class="icon-title">products</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="cart.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/cart" class="nav-link"><span class="material-symbols-outlined">
                 shopping_cart_checkout
                 </span><span class="icon-title">cart</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="profile.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/profile" class="nav-link"><span class="material-symbols-outlined">
                 account_box
                 </span><span class="icon-title">profile</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="contact-us.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/contact-us" class="nav-link"><span class="material-symbols-outlined">
                 more_vert
                 </span><span class="icon-title">about</span></span></a></li>
             </ul>   
@@ -45,8 +45,8 @@ search
         <div class="error-box"style="display:none">
         item not found.
     </div>
-    <div class="error404" id="error404" style="display:none">
-        <button href="./products.html" class="back-btn" onclick="location.href='./products.html'"></button>
+    <div class="error404" id="error404" style="display:none;z-index: 2;">
+        <button href="/products" class="back-btn" onclick="location.href='./products.html'"></button>
     </div>
     <div class="main-div" id="main-div">
         <div class="first-partion">
@@ -58,14 +58,14 @@ search
         <p class="long-product-description" id="long-product-description"></p>
         <div class="product-review" id="product-review"></div>
         <div class="currency-type">
-        <span class="product-price" id="product-price"></span>&nbsp;ETB</div>
-        </div>
+        <span class="product-price" id="product-price"></span class="your-currency-type">&nbsp;ETB</div>
+        </div><!--should load currency type-->
         <div class="third-partion" id="third-partion">
-            <div class="currency-type2" id="currency-type2"> <span class="product-price2" id="product-price2"></span ></div>
+            <div>Your Balance:<span class="currency-type2" id="currency-type2"> <span class="yourBalance" id="yourBalance">LOADING...</span ></span></div>
             <div class="quantity-with-btn">
           <input type="number" class="quantity" placeholder="quantity" name="quantity"><span class="computer-btn" type="submit">ADD</span></div>
-         <div class="available-quantity"></div>
-         <div class="yourQuantity"></div>
+         <div><span> Available quantity:</span><span class="available-quantity"></span></div>
+         <div><span>quantity:</span> <span class="yourQuantity" style="display: inline-block;"></span></div>
           <div class="total-price-container">Total price:  <span class="total-price" id="total-price2"></span></div>
      
           <button class="buy-button">BUY NOW</button>
@@ -147,14 +147,13 @@ const long_product_description = document.querySelector('.long-product-descripti
     long_product_description.innerText=`${products.longdescription}`;
 const product_price = document.querySelector('.product-price');
     product_price.innerText=`${products.price}`;
-const balance_div = document.querySelector('.product-price2');
-   balance_div.innerText='Balnace'+ Number( localStorage.getItem('balance'));
+const balance_div = document.querySelector('.yourBalance');
 const product_review = document.querySelector('.product-review');
     product_review.innerText=`Rating:  ${products.review}`;
 const available_quantity_div=document.querySelector('.available-quantity');
 const available_quantity=`${products.quantity}`;
 
-available_quantity_div.innerText=`${available_quantity} items in store`;
+available_quantity_div.textContent=available_quantity;
 
 
 
@@ -163,7 +162,7 @@ total_price.innerText=products.price;
 total_price.value=products.price;
 const quantity_input= document.querySelector('.quantity');
 const yourQuantity=document.querySelector(".yourQuantity");
-yourQuantity.textContent='quantity:'+(quantity_input.value||1);
+yourQuantity.textContent=quantity_input.value||1;
 const third_partion= document.querySelector('.third-partion');
 
 const error404=document.querySelector('.error404');
@@ -175,13 +174,15 @@ computer_btn.addEventListener('click',computer);
 function computer(){
 
     const quantity_value =Number( quantity_input.value)||1;
-    yourQuantity.textContent=`quantity:  ${quantity_value}`;
+    yourQuantity.textContent=quantity_value;
     if (quantity_value<=available_quantity){
     const selected_item__price = Number(`${products.price}`);
+    quantity_input.value='';
     let total_value= (selected_item__price * quantity_value*100)/100;
     total_price.innerText=`${total_value}`;
         total_price.value=`${total_value}`;
-    quantity_input.value='';
+        total=total_price.value
+    
     computer_btn.value=quantity_value}
     else {error_box.style.display='flex';
               quantity_input.value='';
@@ -191,71 +192,77 @@ function computer(){
 
 }
 
-buy_button.addEventListener('click',()=>{
-    let total_price2=document.querySelector('.total-price');
-    // total_price.innerText=products.price;
-
-  let transaction_history=JSON.parse( localStorage.getItem('history'));
-
-let quantity=Number( computer_btn.value ||1);
-const price=products[item_id-1].price;
-const id=item_id-1;
-
-if(price<=balance){
-  let   new_balance = balance-price;
-localStorage.setItem('balance',new_balance);
-
- transaction_history.unshift(`{${id+1},${quantity}}`);
- localStorage.setItem('history',JSON.stringify( transaction_history));
-
-error_box.style.display='flex';
-error_box.style.background='var(--clr-success)';
-error_box.textContent='successfull transaction';
-setTimeout(()=>{error_box.style.display='none'},2500);
-balance=localStorage.getItem('balance');
-balance_div.innerText=balance;}
-else{
-    
-error_box.style.display='flex';
-error_box.style.background='var(--clr-error)';
-error_box.textContent='total price is over your balance';
-setTimeout(()=>{error_box.style.display='none'},2500);
-
-
-}
-})
-
- 
-}
-
-
-    }
+buy_button.addEventListener('click',async()=>{
+    buy_button.disabled=true;
+    buy_button.style.cursor='not-allowed';
+    await buyFunction();
+    buy_button.disabled=false;
+    buy_button.style.cursor='default';
+ }) 
+}}
 fetchProducts(limit,offset);
-
-
-
-
-
-
-
-    
-        if(!localStorage.getItem('history')){localStorage.setItem('history',JSON.stringify ([]))}
-
-
-let balance=localStorage.getItem('balance')||localStorage.setItem('balance',20000.01);
-
-
-
-
-
+async function getUserInfo(){
+        const data =await fetch("/api/me",{
+            method:"post",
+            headers:{"content-Type":"application/json"}
+        });
+        const user=await data.json();
+        document.querySelector(".yourBalance").textContent=await user.balance;
+}
+async function buyFunction(){
+    const totalPriceDiv=document.querySelector(".total-price").value;
+    const total=Number(totalPriceDiv);
+    const quantityDiv=document.querySelector('.yourQuantity').textContent;
+    const quantity=Number(quantityDiv);
+    const priceDiv=document.querySelector(".product-price").textContent;
+    const price=Number(priceDiv);
+    const balance=Number(document.querySelector('.yourBalance').textContent);
+    if(total>balance){
+    error_box.style.background='var(--clr-error)';
+    error_box.textContent='total price is over your balance';
+    error_box.style.display='flex';
+    setTimeout(()=>{error_box.style.display='none'},2500);
+    return;
+    }
+    const data={
+        total:total,
+        itemId:item_id,
+        quantity:quantity,
+        price:price
+    };
+    const result=await fetch("/api/buy",{
+        method:"post",
+        headers:{"content-Type":"application/json"},
+        body:JSON.stringify(data)
+    })
+    const resultData=await result.json();
+    if(result.status===200){
+    document.querySelector('.yourBalance').textContent=resultData.newBalance;
+    document.querySelector('.available-quantity').textContent=resultData.newQuantity;
+    error_box.style.background='var(--clr-success)';
+    error_box.textContent= resultData.message;
+    error_box.style.display='flex';
+    setTimeout(()=>{error_box.style.display='none'},2500);
+    }
+    else if(result.status===500||result.status===400||result.status===404){
+    error_box.style.background='var(--clr-error)';
+    error_box.textContent= resultData;
+    error_box.style.display='flex';
+    setTimeout(()=>{error_box.style.display='none'},2500);
+    }
+    else if(result.status===401){
+        location.href='/login';
+    }
+};
 
 const error_box=document.querySelector('.error-box');
 
 async function  store(){
     const data={
         productId:item_id,
-        quantity:computer_btn.value
-    }
+        quantity:Number(document.querySelector('.yourQuantity').textContent)
+    };
+    console.log(data.quantity)
 const result= await fetch("/addToCart",{
     method:"post",
     headers:{"content-Type":"application/json"},
@@ -289,7 +296,7 @@ const search_button=document.querySelector('.search-button');
 search_button.addEventListener('click',()=>{  
    search_input_value =search_input.value.trim().toLowerCase();
   location.href=`./products.html?search=${search_input_value}`;})
-
+getUserInfo();
 
 
 

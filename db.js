@@ -5,7 +5,7 @@ const pool = new Pool({
     ssl:{rejectUnauthorized:false}
 })
 module.exports=pool;
-async function ech(){
+async function initializeDb(){
 //create a table for products
 async function createTableProducts() {
     try{
@@ -20,57 +20,51 @@ async function createTableProducts() {
         quantity int,
         image varchar(255),
         catagory varchar(25)
-        
-        );`;
-        const query2=`create table if not exists buyers(
+        );
+        create table if not exists users(
         id serial primary key,
         fullName varchar(25) not null,
         email varchar(255) not null,
+        balance int not null default 0,
+        isadmin boolean default false,
         password varchar(255) not null
-        );`
-        const query3=`CREATE TABLE IF NOT EXISTS cart_items (
+        );
+        CREATE TABLE IF NOT EXISTS cart_items (
          id SERIAL PRIMARY KEY,
-         user_id INT NOT NULL ,FOREIGN KEY(user_id) REFERENCES buyers(id),
+         user_id INT NOT NULL ,FOREIGN KEY(user_id) REFERENCES users(id),
          product_id INT NOT NULL,
          FOREIGN KEY(product_id) REFERENCES products(id),
          UNIQUE(user_id,product_id),
          quantity INT NOT NULL DEFAULT 1,
          added_at TIMESTAMP DEFAULT now());
-    `;
-//   CREATE TABLE orders (
-//   id SERIAL PRIMARY KEY,
-//   user_id INT NOT NULL,
-//   total NUMERIC NOT NULL,
-//   status VARCHAR(20) NOT NULL,
-//   created_at TIMESTAMP DEFAULT now()
-// );
+CREATE TABLE if not exists orders (
+id SERIAL PRIMARY KEY,
+  user_id INT NOT NULL,
+  total NUMERIC NOT NULL,
+  status VARCHAR(20) NOT NULL default 'pending',
+  created_at TIMESTAMP DEFAULT now()
+);
 
-// CREATE TABLE order_items (
-//   id SERIAL PRIMARY KEY,
-//   order_id INT NOT NULL REFERENCES orders(id),
-//   product_id INT NOT NULL,
-//   quantity INT NOT NULL,
-//   price NUMERIC NOT NULL
-// );
+CREATE TABLE if not exists order_items (
+  id SERIAL PRIMARY KEY,
+  order_id INT NOT NULL REFERENCES orders(id),
+  product_id INT NOT NULL,
+  quantity INT NOT NULL,
+  price NUMERIC NOT NULL
+);`;
+
 
         await pool.query(query);
-            await pool.query(query2);
-            await pool.query(query3);
-            // await pool.query(query4)
         console.log("table created");
-    //     let Name='wireless Mouse';
-    //     let checkQuery=`select * from products where name ilike $1 limit 10 offset 0`;
-    //    const select= await pool.query(checkQuery,[`%${Name}%`]);
-    //    console.log(select.rows)
 
     }
     catch(err){
         console.log("can't create table for products",err)}
-    }
+};
     //create a table for products
-    async function createdataProducts() {
+async function inserMockData() {
         try{
-            const query=`INSERT INTO products
+            const mockData=`INSERT INTO products
 (name, price, currencyType, description, longDescription, review, quantity, image, catagory)
 VALUES
 ('Wireless Mouse', 25, 'USD', 'Ergonomic wireless mouse', 'Comfortable ergonomic wireless mouse with long battery life and adjustable DPI settings.', 4, 120, 'images/mouse.jpg', 'Electronics'),
@@ -173,18 +167,18 @@ VALUES
 ('Dog Toy Ball', 10, 'USD', 'Durable dog ball', 'Bouncy and durable ball great for active play with pets.', 4, 190, 'images/dog-ball.jpg', 'Pets')
 ;
 `;
-            await pool.query(query);
+            await pool.query(mockData);
 
             console.log("data inserted");
         }
         catch(err){
             console.log("can't insert data for products",err)}
-        };
- createTableProducts();
- const isTableEmpty=await pool.query(`select * from products where id =1`);
+};
+await createTableProducts();
+const isTableEmpty=await pool.query(`select * from products where id =1`);
 if(isTableEmpty.rowCount==0){
- createdataProducts();
+await inserMockData();
 }
 //  pool.query(`drop table products`);
 }
-ech();
+initializeDb();

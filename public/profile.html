@@ -24,25 +24,26 @@ search
 </span></button></div>
        <nav class="main-nav" id="main-nav">
             <ul class="nav-list-container" id="nav-list-container">
-                <li ><span class="icon-with-title"><a href="index.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/" class="nav-link"><span class="material-symbols-outlined">
                 home
                 </span><span class="icon-title">home</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="products.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/products" class="nav-link"><span class="material-symbols-outlined">
                 local_mall
                 </span><span class="icon-title">products</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="cart.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/cart" class="nav-link"><span class="material-symbols-outlined">
                 shopping_cart_checkout
                 </span><span class="icon-title">cart</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="profile.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/profile" class="nav-link"><span class="material-symbols-outlined">
                 account_box
                 </span><span class="icon-title">profile</span></span></a></li>
-                <li ><span class="icon-with-title"><a href="./contact-us.html" class="nav-link"><span class="material-symbols-outlined">
+                <li ><span class="icon-with-title"><a href="/contact-us" class="nav-link"><span class="material-symbols-outlined">
                 more_vert
                 </span><span class="icon-title">more</span></span></a></li>
             </ul>   
     </header>
+    <div class="error-box" style="display: none;"></div>
     <div class="profile">
-    <div class="picture-container"><img src="/images/profile-picture.jpg" alt="profile-picture" class="picture"><span class="fullName"id="fullName">Loading</span><span class="edit-name" disabled>edit name</span>
+    <div class="picture-container"><img src="/images/profile-picture.jpg" alt="profile-picture" class="picture"><span class="fullName"id="fullName">Loading</span><span class="edit-name" >edit name</span>
     <div class="email" id="email">Loading</div></div>
 <div class="balance-div">00.00</div>
 <button class="recharge-button">Recharge balance</button>
@@ -54,6 +55,16 @@ search
         <h2 class="section-title">Transaction history</h2>
         <div class="transactions-list" id="transactions-list">
             <!-- Transaction cards will be injected here by script -->
+             <div class="tlCard">
+                <div class="first-container">
+                <img src="images/charger.jpg" alt="product-image"class="product-image"></div>
+                <div class="middle-container">
+                    <div class="pTitle">chargeggggggggggjjjjjjjjjjjjjjjjgggggggggggr</div>
+                    <div class="pQuantity">10</div>
+                    <div class="pPrice">500USD</div>
+                </div>
+                <div class="last-container"></div>
+             </div>
         </div>
     </div>
 
@@ -61,10 +72,13 @@ search
 
 </body>
 <script>
+    const errorBox=document.querySelector(".error-box");
     const picture=document.querySelector(".picture");
-    const editName=document.querySelector("edit-name");
-    const fullName=document.getElementById("fullName")
-    const email=document.getElementById("email")
+    const editName=document.querySelector(".edit-name");
+    const fullName=document.getElementById("fullName");
+    const email=document.getElementById("email");
+    const balance_div=document.querySelector('.balance-div');
+    const rechargeButton=document.querySelector(".recharge-button");
     const form=document.querySelector(".form");
     const logoutButton=document.querySelector(".submitButton");
 
@@ -76,10 +90,11 @@ search
         const user=await data.json();
     fullName.textContent=user.fullname;
     email.textContent=user.email;
+    balance_div.textContent=user.balance
     };
     fetchUser();
 
-    form.addEventListener('submit',async()=>{
+form.addEventListener('submit',async()=>{
         event.preventDefault();
        const result= await fetch("/logout",{
             method:"post",
@@ -90,8 +105,51 @@ search
         }
     });
 
+editName.addEventListener("click",async()=>{
+    const name=document.querySelector(".fullName").textContent;
+    const newNameRaw=prompt('enter you full name',name);
+    const newName=newNameRaw.trim().toUpperCase();
+    if(newName===name){return alert(`new name can't be the same as old name`)};
+    const result= await fetch("/api/editName",{
+        method:"post",
+        headers:{"content-Type":"application/json"},
+        body:JSON.stringify({newName})
+    })
+    data=await result.json()
+    if(result.status===200){
+        fullName.textContent=await data.Name;
+        errorBox.textContent=await data.message;
+        errorBox.style.background='var(--clr-success)';
+        errorBox.style.display='block';
+        setTimeout(()=>{errorBox.style.display='none'},2500);
+    }
+})
 
-    
+rechargeButton.addEventListener("click",async()=>{
+    const newBalanceRaw=prompt('Enter the deposit amount',100);
+    const newBalance=Number( newBalanceRaw.trim());
+    if(isNaN(newBalance)||newBalance<1||newBalance>1000){return alert("only numbers between 1 and 1000 allowed")}
+    const result=await fetch("/api/editBalance",{
+        method:"post",
+        headers:{"content-Type":"application/json"},
+        body:JSON.stringify({newBalance})
+    })
+    const data=await result.json(); 
+    if(result.status===200){
+        balance_div.textContent=await data.balance;
+        errorBox.textContent=await data.message;
+        errorBox.style.background='var(--clr-success)';
+        errorBox.style.display='block';
+        setTimeout(()=>{errorBox.style.display='none'},2500);
+    }
+    else if(result.status===400||result.status===401){
+        errorBox.textContent=await data;
+        errorBox.style.background='var(--clr-error)';
+        errorBox.style.display='block';
+        setTimeout(()=>{errorBox.style.display='none'},2500);
+    }
+});
+
 </script>
 <script type="module">
 //     import {products} from './data.js';
