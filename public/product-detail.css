@@ -29,8 +29,26 @@
 body{ 
     font-family: "Zalando Sans SemiExpanded", sans-serif;
   font-optical-sizing: auto;
-  /* Added to prevent horizontal scroll from grid */
-  overflow-x: hidden; 
+/* 1. Define the gradient with your colors */
+    /* We use a 200% size so we have room to move it around */
+    background: radial-gradient(circle at center, #dbbc0d6e 0%, #2754e659 100%);
+    background-size: 200% 200%;
+
+    /* 2. Attach the animation */
+    /* infinite = loops forever, alternate = goes back and forth smoothly */
+    animation: gradient-move 10s ease infinite alternate;
+}
+@keyframes gradient-move {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 10% 50%;
+    }
+
 }
 .first-page{
     width: 100%;
@@ -176,6 +194,7 @@ justify-content: center;
     display: inline-block;
     border: none;
     padding: 0 5px; /* Added padding */
+    background: transparent;
 }
 .quantity::placeholder{
 color: var(--clr-text-muted);

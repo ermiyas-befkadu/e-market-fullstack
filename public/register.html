@@ -8,27 +8,34 @@
 </head>
 <body>
     <div class="errorBox" style="display: none;">Unkown error</div>
+    <h1>E-market</h1>
     <form action="" class="form">
+        <h2>Register here</h2>
+        <label for="fullName">Full Name</label>
         <input type="text" name="fullName"class="fullName">
+        <label for="email">Email</label>
         <input type="email" name="email" class="email">
-        <input type="password" name="password" class="password">
+        <label for="password">Password</label>
+        <input type="password" name="password" class="password" minlength="8">
         <button type="submit" class="submitButton">Register</button><span>Already have an account? <a href="/login">Login</a></span>
     </form>
 
 
 <script>
     const errorBox=document.querySelector('.errorBox');
-    const form=document.querySelector(".form");
+    const form=document.querySelector(".form"); 
     const submitButton=document.querySelector(".submitButton");
 form.addEventListener('submit',async ()=>{
     event.preventDefault();
+    submitButton.disabled=true;
+    // submitButton 
     const formData=new FormData(form);
    let data={
     fullName:formData.get("fullName").trim().toUpperCase(),
     email:formData.get("email").trim().toUpperCase(),
     password:formData.get("password")
    };
-  const result= await fetch("/api/register",{
+  const result= await fetch("/auth/register",{
     method:"post",
     headers:{"content-Type":"application/json"},
     body:JSON.stringify(data)
@@ -40,12 +47,14 @@ form.addEventListener('submit',async ()=>{
         submitButton.textContent='already registered'
         submitButton.style.cursor='not-allowed'
   }
-  else if(result.status===400){
+  else if(result.status===400||result.status===402){
     errorBox.innerHTML= await result.json();
     errorBox.style.display='block';
         submitButton.disabled=false;
-        submitButton.textContent='Register'
-        submitButton.style.cursor='default'
+        submitButton.textContent='Register';
+        submitButton.style.cursor='default';
+        setTimeout(()=>{errorBox.style.display='none'},1000)
+
   }
 })
 </script>

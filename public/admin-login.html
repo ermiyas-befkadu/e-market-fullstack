@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>admin-login</title>
+</head>
+<body>
+    <div class="notification" style="display: none;"></div>
+    <form action="/auth/admin">
+        <label for="email">email</label>
+        <input type="email"name="email" required>
+        <label for="password">password</label>
+        <input type="password"name="password" minlength="10" required>
+        <button type="submit"class="login">Login</button>
+    </form>
+
+<script>
+    const form= document.querySelector("form");
+    const notificationDiv=document.querySelector(".notification");
+    const loginButton=document.querySelector(".login");
+    form.addEventListener("submit",async(e)=>{
+        e.preventDefault();
+        disableButton(loginButton,'logining...')
+        const formData= new FormData(form);
+        const email=formData.get("email");
+        const password=formData.get("password")
+        const credentials={
+            email:email,
+            password:password
+        };
+        const result=await fetch("/auth/admin",{
+            method:"post",
+            headers:{"content-Type":"application/json"},
+            body:JSON.stringify(credentials)
+        })
+        if(result.status!==200){
+            enableButton(loginButton,'Login')
+            return notification(0,await result.json());
+        };
+        disableButton(loginButton,'Already logined')
+        notification(1,await result.json());
+        return location.href="/admin/dashboard"
+    })
+
+function notification(errType,message){
+    notificationDiv.textContent=message;
+    notificationDiv.style.background=errType?'green':'red';
+    notificationDiv.style.display='flex';
+    setTimeout(()=>{notificationDiv.style.display='none'},6000)
+};
+
+function disableButton(button,text){
+    button.disabled=true;
+    button.textContent=text?text:button.textContent;
+    button.style.cursor='not-allowed';
+};
+
+function enableButton(button,text){
+    button.disabled=false;
+    button.textContent=text?text:button.textContent;
+    button.style.cursor='default';
+};
+</script>
+
+</body>
+</html>

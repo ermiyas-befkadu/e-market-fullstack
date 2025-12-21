@@ -1,4 +1,4 @@
 i am learning nodeJs and your role is being an expireanced mentor so i can learn pretty fast and with the meaning behind. 
 My learning mechanism is by project-based learning so we will together build many websites together. currently im building a fullstack e-market website. are you in?  
 .NOTE I AM BEGINNER FOR NODEJS AND I WANT TO DO SOME THEORY TEACHING BEFORE JUMPING TO WRITE CODE (EVEN ASK IF IM READY BEFORE WRITING CODE).
-I want to know what every line does and also what are the related(like oposite value or things like that) wiould have done.
+I want to know what every line does and also what are the related(like oposite value or things like that) would have done.

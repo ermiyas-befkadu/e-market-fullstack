@@ -42,7 +42,7 @@ async function fetchProducts(limit,offset) {
             body:JSON.stringify(condition)
         })
         .then(res=>res.json()).then( 
-        fetchedProducts=>{products=fetchedProducts ;return products;})
+        fetchedProducts=>{products=fetchedProducts; console.log(products);return products;})
         .catch((error)=>{(console.log(error))})
             console.log(products)
 

@@ -15,9 +15,6 @@ async function fetchCart(){
     })
   })
    cart_items= await data.json();
-   console.log(cart_items)
-
-
 if (data.status===200){
    for (let i=0;i<cart_items.cart.length;i++){
  card_creater(i);
@@ -133,7 +130,7 @@ search_button.addEventListener('click',()=>{
 
 
 async function remover(id){
-const cartId=Number(id);console.log(cartId)
+const cartId=Number(id);
 const result=await fetch("/api/deleteCart",{
   method:"post",
   headers:{"content-Type":"application/json"},
@@ -162,7 +159,6 @@ else{
 }
 };
 async function buyFunction(item_id,quantity,price){
-    console.log('id',item_id,'quan',quantity,'price',price);
     const total=quantity*price;
     // const balance=Number(document.querySelector('.yourBalance').textContent);
     // if(total>balance){

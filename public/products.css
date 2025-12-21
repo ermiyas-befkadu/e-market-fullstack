@@ -28,7 +28,28 @@
 }
 body{ 
     font-family: "Zalando Sans SemiExpanded", sans-serif;
-  font-optical-sizing: auto;}
+  font-optical-sizing: auto;
+/* 1. Define the gradient with your colors */
+    /* We use a 200% size so we have room to move it around */
+    background: radial-gradient(circle at center, #dbbc0d6e 0%, #2754e659 100%);
+    background-size: 200% 200%;
+
+    /* 2. Attach the animation */
+    /* infinite = loops forever, alternate = goes back and forth smoothly */
+    animation: gradient-move 10s ease infinite alternate;
+}
+@keyframes gradient-move {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 10% 50%;
+    }
+
+}
 .hero-section{
     width: 100%;
     height: fit-content;
@@ -38,7 +59,7 @@ body{
 header{
     
     color: var(--clr-primary);
-    background-color: var(--clr-bg-alt);
+    background-color: rgba(245, 222, 179, 0.425);
     padding: 10px 0;
     margin-top: 0px;
     margin-left:4px;
@@ -49,7 +70,7 @@ header{
     align-items: center;
     width: 100%;
    z-index: 3;
-   filter: blur(0px);
+   backdrop-filter: blur(10px);
 }
 .logo-img{
     width: 50px;
@@ -125,7 +146,7 @@ scale: 1.2;
     padding: 5px 10px;
     display: flex;
     justify-content: center;
-    
+    background: transparent;
     
 }
 .search-button{
@@ -156,7 +177,7 @@ scale: 1.2;
     border: 1px solid var(--clr-border);
     border-radius: 8px;
     /* padding: 15px; */
-    background-color: var(--clr-surface);
+    background-color: rgba(245, 222, 179, 0.315);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.445);
     display: flex;
     flex-direction: column;
@@ -164,6 +185,7 @@ scale: 1.2;
     text-align: center;
     width: 200px;
     height: 400px;
+    backdrop-filter: blur(20px);
 }
 .product-card:hover{
     transform: translateY(-10px);

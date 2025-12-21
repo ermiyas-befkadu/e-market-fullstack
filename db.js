@@ -1,15 +1,16 @@
-const {Pool}=require("pg");
+const { Pool } = require("pg");
 require("dotenv").config();
 const pool = new Pool({
-    connectionString:process.env.DATABASE_URL,
-    ssl:{rejectUnauthorized:false}
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
 })
-module.exports=pool;
-async function initializeDb(){
-//create a table for products
-async function createTableProducts() {
-    try{
-        const query=`create table if not exists products(
+module.exports = pool;
+async function initializeDb() {
+    //create a table for products
+    async function createTableProducts() {
+        try {
+            const query = `
+    create table if not exists products(
         id serial primary key,
         name varchar(25),
         price int,
@@ -21,50 +22,58 @@ async function createTableProducts() {
         image varchar(255),
         catagory varchar(25)
         );
-        create table if not exists users(
+    create table if not exists users(
         id serial primary key,
         fullName varchar(25) not null,
-        email varchar(255) not null,
-        balance int not null default 0,
+        email varchar(255) UNIQUE not null,
+        balance decimal not null default 0,
         isadmin boolean default false,
+        image varchar(255) unique,
         password varchar(255) not null
         );
-        CREATE TABLE IF NOT EXISTS cart_items (
-         id SERIAL PRIMARY KEY,
-         user_id INT NOT NULL ,FOREIGN KEY(user_id) REFERENCES users(id),
-         product_id INT NOT NULL,
-         FOREIGN KEY(product_id) REFERENCES products(id),
-         UNIQUE(user_id,product_id),
-         quantity INT NOT NULL DEFAULT 1,
-         added_at TIMESTAMP DEFAULT now());
-CREATE TABLE if not exists orders (
-id SERIAL PRIMARY KEY,
-  user_id INT NOT NULL,
-  total NUMERIC NOT NULL,
-  status VARCHAR(20) NOT NULL default 'pending',
-  created_at TIMESTAMP DEFAULT now()
+
+    CREATE TABLE IF NOT EXISTS cart_items (
+        id SERIAL PRIMARY KEY,
+        user_id INT NOT NULL ,FOREIGN KEY(user_id) REFERENCES users(id),
+        product_id INT NOT NULL,
+        FOREIGN KEY(product_id) REFERENCES products(id),
+        UNIQUE(user_id,product_id),
+        quantity INT NOT NULL DEFAULT 1,
+        added_at TIMESTAMP DEFAULT now());
+    CREATE TABLE if not exists orders (
+        id SERIAL PRIMARY KEY,
+        user_id INT NOT NULL,
+        total NUMERIC NOT NULL,
+        status VARCHAR(20) NOT NULL default 'pending',
+        created_at TIMESTAMP DEFAULT now()
+        );
+
+    CREATE TABLE if not exists order_items (
+        id SERIAL PRIMARY KEY,
+        order_id INT NOT NULL REFERENCES orders(id),
+        product_id INT NOT NULL,
+        quantity INT NOT NULL,
+        price NUMERIC NOT NULL
 );
-
-CREATE TABLE if not exists order_items (
-  id SERIAL PRIMARY KEY,
-  order_id INT NOT NULL REFERENCES orders(id),
-  product_id INT NOT NULL,
-  quantity INT NOT NULL,
-  price NUMERIC NOT NULL
-);`;
+    CREATE INDEX IF NOT EXISTS idx_orders_createdat
+ON orders (created_at);
+`;
 
 
-        await pool.query(query);
-        console.log("table created");
+            await pool.query(query);
+                        
+            console.log("table created");
 
-    }
-    catch(err){
-        console.log("can't create table for products",err)}
-};
+        }
+        catch (err) {
+            console.log("can't create table for products", err)
+        }
+    };
     //create a table for products
-async function inserMockData() {
-        try{
-            const mockData=`INSERT INTO products
+    async function inserMockData() {
+        try {
+            const mockData = `
+            INSERT INTO products
 (name, price, currencyType, description, longDescription, review, quantity, image, catagory)
 VALUES
 ('Wireless Mouse', 25, 'USD', 'Ergonomic wireless mouse', 'Comfortable ergonomic wireless mouse with long battery life and adjustable DPI settings.', 4, 120, 'images/mouse.jpg', 'Electronics'),
@@ -168,17 +177,18 @@ VALUES
 ;
 `;
             await pool.query(mockData);
-
+            await pool.query(`insert into users(fullName,email,balance,isadmin,password) VALUES('MRADMIN','ADMIN@E-MARKET.com',0,true,'$2b$12$aU/2Vdfe5E1mZRbb8.05AOXqRLDpXigPHPgLLaEAwJrjkw9JCYhlG')`)
             console.log("data inserted");
         }
-        catch(err){
-            console.log("can't insert data for products",err)}
-};
-await createTableProducts();
-const isTableEmpty=await pool.query(`select * from products where id =1`);
-if(isTableEmpty.rowCount==0){
-await inserMockData();
-}
-//  pool.query(`drop table products`);
+        catch (err) {
+            console.log("can't insert data for products", err)
+        }
+    };
+    await createTableProducts();
+    const isTableEmpty = await pool.query(`select * from products`);
+    if (isTableEmpty.rowCount === 0) {
+        await inserMockData();
+    }
+    //  pool.query(`drop table products`);
 }
 initializeDb();

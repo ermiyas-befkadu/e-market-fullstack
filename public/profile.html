@@ -16,7 +16,7 @@
     <section class="hero-section">
     <header class="main-header" id="main-header">
         <div class="logo-with-img"id="logo--with-img">
-        <img src="images/logo trimmed.jpg" alt="logo" id="logo-img"class="logo-img">
+        <img src="images/logo_trimmed-removebg.png" alt="logo" id="logo-img"class="logo-img">
         <h1 class="logo"id="logo">E-market</h1></div>
         <div class="search-input-container" id="search-input-container">
     <input class="search-input" id="search-input"><button class="search-button"><span class="material-symbols-outlined">
@@ -41,9 +41,12 @@ search
                 </span><span class="icon-title">more</span></span></a></li>
             </ul>   
     </header>
-    <div class="error-box" style="display: none;"></div>
+    <div class="error-box" style="display: none;background: red;"></div>
     <div class="profile">
-    <div class="picture-container"><img src="/images/profile-picture.jpg" alt="profile-picture" class="picture"><span class="fullName"id="fullName">Loading</span><span class="edit-name" >edit name</span>
+    <div class="picture-container"><img src="images/profile-picture.jpg" alt="profile-picture" class="picture">
+    <form action="/upload/image" class="uploadForm" enctype="multipart/form-data" >  <span class="edit-photo">edit picture</span>
+        <input type="file" accept="image/*"name="image" class="input-photo" style="display: none;"></input >
+    <button type="submit" class="upload"value='false' style="display: none;">Upload</button></form> <span class="fullName"id="fullName">Loading</span><span class="edit-name" >edit name</span>
     <div class="email" id="email">Loading</div></div>
 <div class="balance-div">00.00</div>
 <button class="recharge-button">Recharge balance</button>
@@ -55,18 +58,22 @@ search
         <h2 class="section-title">Transaction history</h2>
         <div class="transactions-list" id="transactions-list">
             <!-- Transaction cards will be injected here by script -->
-             <div class="tlCard">
+             <div class="tlCard tlCardSkeleton">
                 <div class="first-container">
-                <img src="images/charger.jpg" alt="product-image"class="product-image"></div>
-                <div class="middle-container">
-                    <div class="pTitle">chargeggggggggggjjjjjjjjjjjjjjjjgggggggggggr</div>
-                    <div class="pQuantity">10</div>
-                    <div class="pPrice">500USD</div>
+                <div class="skeleton skeleton-circle"></div>
                 </div>
-                <div class="last-container"></div>
+                <div class="middle-container">
+                    <div class="pTitle skeleton skeleton-text skeleton-title"></div>
+                    <div class="pQuantity skeleton skeleton-text skeleton-qty"></div>
+                    <div class="pPrice skeleton skeleton-text skeleton-price"></div>
+                </div>
+                <div class="last-container"><div class="skeleton skeleton-text skeleton-box"></div>
+            <div class="skeleton order-id"></div>
+        <div class="skeleton created-at"></div></div>
              </div>
         </div>
     </div>
+<button class="more">More...</button>
 
 </section>
 
@@ -75,24 +82,38 @@ search
     const errorBox=document.querySelector(".error-box");
     const picture=document.querySelector(".picture");
     const editName=document.querySelector(".edit-name");
+    const inputPic=document.querySelector(".input-photo");
+    const uploadBtn=document.querySelector(".upload");
     const fullName=document.getElementById("fullName");
     const email=document.getElementById("email");
     const balance_div=document.querySelector('.balance-div');
     const rechargeButton=document.querySelector(".recharge-button");
     const form=document.querySelector(".form");
     const logoutButton=document.querySelector(".submitButton");
+    const transactionHistoryDiv=document.querySelector(".transactions-list");
+    const tlCard=document.querySelector(".tlCardSkeleton");
+    const more=document.querySelector(".more");
+    const uploadForm=document.querySelector(".uploadForm");
+    const editPhoto=document.querySelector(".edit-photo");
+    let cardQuery='';
+    let limit=4,offset=0;
+function notification(type,message){
+        console.log(message);
+        errorBox.style.background=type===1?'var(--clr-success)':'var(--clr-error)';
+        errorBox.textContent=message?message:"unknown error"
+        errorBox.style.display='block';
+        setTimeout(()=>{errorBox.style.display='none'},2500);
+};
 
-    async function fetchUser(){
-        const data =await fetch("/api/me",{
-            method:"post",
-            headers:{"content-Type":"application/json"}
-        });
+async function fetchUser(){
+        const data =await fetch("/api/me");
         const user=await data.json();
+    if(data.status!==200)return notification(0,user);
     fullName.textContent=user.fullname;
     email.textContent=user.email;
-    balance_div.textContent=user.balance
+    balance_div.textContent=user.balance;
+    picture.src=user.image?`/users-profile-picture/${user.image}`:"/images/profile-picture.jpg";
     };
-    fetchUser();
 
 form.addEventListener('submit',async()=>{
         event.preventDefault();
@@ -103,6 +124,56 @@ form.addEventListener('submit',async()=>{
         if (result.status===200){
             return location.href='/login'
         }
+    });
+
+picture.addEventListener("click",()=>{
+    picture.id=picture.id?'':'expanded';
+})
+
+editPhoto.addEventListener("click",()=>{
+    inputPic.style.display='inline-block';
+    editPhoto.style.display='none';
+})
+
+inputPic.addEventListener("change",(e)=>{
+    const file=e.target.files[0];
+    if(!file || !file.type.startsWith("image/"))return notification(0,'input type should be image');
+    picture.src=URL.createObjectURL(file);
+    picture.onload=(()=>{URL.revokeObjectURL(picture.src);
+    uploadBtn.value=uploadBtn.value=='false'?'true':'false';
+    console.log(uploadBtn.value,'value==false',uploadBtn.value=='false')
+    uploadBtn.style.display=uploadBtn.value=='true'?'inline-block':'none';
+    });
+
+});
+
+uploadForm.addEventListener("submit",async(e)=>{
+    e.preventDefault();
+    uploadBtn.disabled=true;
+    uploadBtn.textContent='uploading...';
+    const file=inputPic.files[0];
+    const formData=new FormData();
+    formData.append("image",file)
+    const result=await fetch("/upload/image",{
+        method:"post",
+        body:formData
+    })
+    const data=await result.json();
+    if(result.status===200){
+        picture.src=`/users-profile-picture/${data.fileName}`;
+        
+        uploadBtn.textContent='Upload';
+        uploadBtn.disabled=false;
+        
+        inputPic.style.display='none';
+        editPhoto.style.display='inline-block';
+        return notification(1,data.message);}
+    else if(result.status===400||result.status===401||result.status===500&&data){
+        uploadBtn.textContent='Upload';
+        uploadBtn.disabled=false;
+       return  notification(0,data);
+    }
+    else return notification(0,"UNKOWN ERROR")
     });
 
 editName.addEventListener("click",async()=>{
@@ -149,6 +220,52 @@ rechargeButton.addEventListener("click",async()=>{
         setTimeout(()=>{errorBox.style.display='none'},2500);
     }
 });
+
+async function transactionHistory(){
+    const result =await fetch(`/traxHistory/${limit}/${offset}`);
+    const data=await result.json();
+    if(result.status===200){
+        for(let i=0;i<data.length;i++){
+            tCardCreater(data[i]);
+            
+        }
+    }
+    else if(result.status===400||result.status===500||result.status===404){
+        return notification(0,data);
+    }
+    if(data.length<limit){
+        more.disabled=true;
+        more.textContent=' no more...';
+        more.style.cursor='not-allowed';
+        return;
+     };
+
+};
+
+function tCardCreater(data){
+    cardQuery=cardQuery+=`<div class="tlCard">
+                <div class="first-container">
+                <img src='${data.image}' class="product-image"></div>
+                <div class="middle-container">
+                    <div class="pTitle ">${data.name}</div>
+                    <div class="pQuantity">Amount ${data.order_quantity}</div>
+                    <div class="pPrice"><span style="color:gray;font-size:12px;font-weight:normal;">Total:</span> ${data.total}<span style="color:gray;font-size:12px;font-weight:normal;">${data.currencytype}</span></div>
+                </div>
+                <div class="last-container"><div class="status">${data.status}</div>
+            <div class=" order-id">Orde Id: #<span style="color:blue; text-decoration:underline; cursor:pointer;">${data.order_id}</span></div>
+        <div class=" created-at">${data.created_at}</div></div>
+             </div>`
+ transactionHistoryDiv.innerHTML=cardQuery
+};
+
+more.addEventListener("click",()=>{offset+=limit;transactionHistory();});
+
+fetchUser();
+
+document.addEventListener("DOMContentLoaded",()=>{
+    tlCard.style.display='none';
+    transactionHistory();
+})
 
 </script>
 <script type="module">

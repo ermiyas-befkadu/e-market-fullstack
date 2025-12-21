@@ -8,11 +8,13 @@
 </head>
 <body>
     <div class="errorBox"style="display: none;"></div>
+    <h1>E-market</h1>
     <form action="" class="form">
+        <h2>Login here</h2>
         <label for="email">Email</label>
         <input type="email" name="email" class="email">
         <label for="password">Password</label>
-        <input type="password"class="password" name="password">
+        <input type="password"class="password" name="password" minlength="8">
         <button type="submit" class="submitButton">Login</button><span>New here? <a href="/register">register</a></span>
     </form>
 
@@ -30,7 +32,7 @@
         password:formData.get("password")
     };
      try {
-        const result= await fetch("/api/login",{
+        const result= await fetch("/auth/login",{
         method:"post",
         headers:{"content-Type":"application/json"},
         body:JSON.stringify(data)

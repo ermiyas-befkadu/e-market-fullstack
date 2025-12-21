@@ -17,7 +17,7 @@
     <section class="first-page"id="first-page">
     <header class="main-header" id="main-header">
         <div class="logo-with-img"id="logo--with-img">
-        <img src="images/logo trimmed.jpg" alt="logo" id="logo-img"class="logo-img">
+        <img src="images/logo_trimmed-removebg.png" alt="logo" id="logo-img"class="logo-img">
         <h1 class="logo"id="logo">E-market</h1></div>
         <div class="search-input-container" id="search-input-container">
     <input  class="search-input" id="search-input"><button  class="search-button"><span class="material-symbols-outlined">
@@ -202,13 +202,14 @@ buy_button.addEventListener('click',async()=>{
 }}
 fetchProducts(limit,offset);
 async function getUserInfo(){
-        const data =await fetch("/api/me",{
-            method:"post",
-            headers:{"content-Type":"application/json"}
-        });
+        const data =await fetch("/api/me");
         const user=await data.json();
-        document.querySelector(".yourBalance").textContent=await user.balance;
-}
+    if(data.status===200)return  document.querySelector(".yourBalance").textContent=await user.balance;
+    else if(data.status===400)return document.querySelector(".yourBalance").textContent='Login and add Balnce first';
+    else if (data.status===500)return document.querySelector(".yourBalance").textContent=user;
+    else return document.querySelector(".yourBalance").textContent="UNKOWN ERROR";
+};
+
 async function buyFunction(){
     const totalPriceDiv=document.querySelector(".total-price").value;
     const total=Number(totalPriceDiv);
